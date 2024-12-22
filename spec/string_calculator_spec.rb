@@ -49,5 +49,12 @@ RSpec.describe StringCalculator do
         expect(calculator.add("1,2,1001,3,4")).to eq(10)  # 1001 should be ignored, sum = 1 + 2 + 3 + 4 = 10
       end
     end
+
+    context 'when the string contains multiple custom delimiters' do
+      it 'returns the sum of the numbers using all custom delimiters' do
+        calculator = StringCalculator.new
+        expect(calculator.add("//[*][%]\n5*2%3*4")).to eq(14)  # 5 + 2 + 3 + 4 = 14 with delimiters * and %
+      end
+    end
   end
 end
