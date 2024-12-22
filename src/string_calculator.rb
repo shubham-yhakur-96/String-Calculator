@@ -5,27 +5,32 @@ class StringCalculator
     # Check if the string starts with the custom delimiter syntax
     if numbers.start_with?("//")
       delimiter, numbers = extract_delimiter_and_numbers(numbers)
-      numbers = numbers.split(delimiter)
+      numbers = numbers.split(delimiter)  # Split the numbers by the delimiter(s)
     else
       # Split by commas and newlines for the default case
       numbers = numbers.split(/[\n,]/)
     end
 
-    # Convert all numbers to integers and ignore those greater than 1000
-    numbers = numbers.map(&:to_i).select { |n| n <= 1000 }
-
-    # Convert all numbers to integers and sum them
-    numbers.map(&:to_i).sum
+    # Convert all numbers to integers and filter out those greater than 1000
+    numbers.map(&:to_i).select { |num| num <= 1000 }.sum
   end
 
   private
 
-  # Extract the custom delimiter and numbers from the input string
+  # Extract the custom delimiter(s) and numbers from the input string
   def extract_delimiter_and_numbers(input)
-    # Get the delimiter from the first line (e.g., "//;\n1;2")
+    # Get the delimiter line and the numbers part
     delimiter_line, numbers = input.split("\n", 2)
-    delimiter = delimiter_line[2..-1]  # Remove the "//" part
-    delimiter = delimiter.start_with?('[') ? delimiter[1..-2] : delimiter  # Handle multi-character delimiters
-    return delimiter, numbers
+    
+    # If there are multiple delimiters, handle them
+    if delimiter_line.start_with?("//[")
+      delimiters = delimiter_line[3..-1].split('][').map { |delim| delim.tr('[]', '') }  # Extract and clean the delimiters
+      numbers = numbers.gsub(Regexp.union(delimiters), ',')  # Replace each delimiter with a comma
+    else
+      delimiters = delimiter_line[2..-1]  # Single delimiter
+      numbers = numbers.gsub(delimiters, ',')  # Replace the single delimiter with commas
+    end
+
+    return ',', numbers  # Returning ',' because the delimiters are replaced by commas
   end
 end
