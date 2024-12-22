@@ -42,5 +42,12 @@ RSpec.describe StringCalculator do
         expect(calculator.add("//#\n1#2#3")).to eq(6)  # 1 + 2 + 3 = 6 with delimiter #
       end
     end
+
+    context 'when the string contains numbers greater than 1000' do
+      it 'ignores numbers greater than 1000' do
+        calculator = StringCalculator.new
+        expect(calculator.add("1,2,1001,3,4")).to eq(10)  # 1001 should be ignored, sum = 1 + 2 + 3 + 4 = 10
+      end
+    end
   end
 end
