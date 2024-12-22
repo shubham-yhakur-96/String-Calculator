@@ -1,4 +1,3 @@
-
 class StringCalculator
   def add(numbers)
     return 0 if numbers.empty?
@@ -11,6 +10,9 @@ class StringCalculator
       # Split by commas and newlines for the default case
       numbers = numbers.split(/[\n,]/)
     end
+
+    # Convert all numbers to integers and ignore those greater than 1000
+    numbers = numbers.map(&:to_i).select { |n| n <= 1000 }
 
     # Convert all numbers to integers and sum them
     numbers.map(&:to_i).sum
